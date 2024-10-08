@@ -4,6 +4,7 @@ import goorm.unit.booklog.domain.user.domain.User;
 import goorm.unit.booklog.domain.user.presentation.request.UserCreateRequest;
 import goorm.unit.booklog.domain.user.domain.UserRepository;
 import goorm.unit.booklog.domain.user.presentation.exception.UserIdDuplicatedException;
+import goorm.unit.booklog.domain.user.presentation.exception.UserNotFoundException;
 import goorm.unit.booklog.domain.user.presentation.response.UserPersistResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,11 @@ public class UserService {
         if(userRepository.existsById(id)) {
             throw new UserIdDuplicatedException();
         }
+    }
+
+    public User getUserById(String id) {
+        return userRepository.findById(id)
+                .orElseThrow(UserNotFoundException::new);
     }
 
 }
