@@ -13,7 +13,7 @@ public record UserCreateRequest(
         @Pattern(regexp = "^[a-z0-9]+$", message = "아이디는 영문 소문자와 숫자로만 구성되어야 합니다.")
         String id,
 
-        @Schema(description = "이름",requiredMode = REQUIRED)
+        @Schema(description = "이름", example="홍길동", requiredMode = REQUIRED)
         @NotNull
         String name,
 
