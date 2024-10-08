@@ -8,13 +8,16 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update #validate->update 변경, 기존 테이블은 유지하면서 필요한 변경사항만 적용.
       default_batch_fetch_size: 1000
       jdbc:
         time_zone: Asia/Seoul
     defer-datasource-initialization: true
     show-sql: true
     open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect  # 이 부분을 추가하세요
   data:
     redis:
       host: ${REDIS_HOST:localhost}

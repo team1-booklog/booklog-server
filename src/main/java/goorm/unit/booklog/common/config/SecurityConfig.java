@@ -59,6 +59,7 @@ public class SecurityConfig {
 		"/error",
 		"/favicon.ico",
 		"/index.html",
+			"/users", //회원가입 시 필요
 	};
 
 	CorsConfigurationSource corsConfigurationSource() {
