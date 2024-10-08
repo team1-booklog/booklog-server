@@ -8,7 +8,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: update #validate->update 변경, 기존 테이블은 유지하면서 필요한 변경사항만 적용.
       default_batch_fetch_size: 1000
       jdbc:
         time_zone: Asia/Seoul
@@ -17,7 +17,7 @@ spring:
     open-in-view: false
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQLDialect
+        dialect: org.hibernate.dialect.MySQLDialect  # 이 부분을 추가하세요
   data:
     redis:
       host: ${REDIS_HOST:localhost}
@@ -30,18 +30,4 @@ springdoc:
   swagger-ui:
     operations-sorter: alpha
     tags-sorter: alpha
-
-cloud:
-  ncp:
-    object-storage:
-      endpoint: "https://kr.object.ncloudstorage.com"
-      credentials:
-        access-key: ${NCP_ACCESS_KEY}
-        secret-key: ${NCP_SECRET_KEY}
-        bucket: ${NCP_BUCKET_NAME}
-    region:
-      auto: false
-      static-region: "ap-southeast-2"
-    stack:
-      auto: false
 
