@@ -4,7 +4,6 @@ import goorm.unit.booklog.domain.user.domain.User;
 import goorm.unit.booklog.domain.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-
 import java.util.Optional;
 
 @Repository
@@ -26,5 +25,4 @@ public class UserRepositoryImpl implements UserRepository {
     public Boolean existsById(String id) {
         return jpaUserRepository.existsById(id);
     }
-
 }

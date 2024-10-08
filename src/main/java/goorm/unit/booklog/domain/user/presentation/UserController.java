@@ -1,41 +1,48 @@
 package goorm.unit.booklog.domain.user.presentation;
 
+import goorm.unit.booklog.common.exception.ExceptionResponse;
 import goorm.unit.booklog.domain.user.application.UserService;
 import goorm.unit.booklog.domain.user.presentation.request.UserCreateRequest;
 import goorm.unit.booklog.domain.user.presentation.response.UserPersistResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.Map;
+import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
-@RequestMapping("/users")  // 기본 경로 설정
-@RequiredArgsConstructor   // 의존성 주입을 위한 Lombok 어노테이션
+@RequiredArgsConstructor
+@RequestMapping("/api/v1/users")
+@Tag(name="User",description="유저 관리 api / 담당자 : 장선우")   // 의존성 주입을 위한 Lombok 어노테이션
 public class UserController {
-
     private final UserService userService;
 
-    @PostMapping
+    @Operation(summary="유저 생성", description="유저를 생성합니다.")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode="201",
+                    description="유저 생성 성공",
+                    content=@Content(schema=@Schema(implementation = UserPersistResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode="409",
+                    description="유저 생성 성공",
+                    content=@Content(schema=@Schema(implementation = ExceptionResponse.class))
+            )
+    })
+    @ResponseStatus(CREATED)
+    @PostMapping("/signup")
     public ResponseEntity<UserPersistResponse> createUser(
-            @Valid @RequestBody UserCreateRequest request  // 요청 데이터를 검증 및 매핑
+            @Valid @RequestBody UserCreateRequest request
     ) {
-        String userId = userService.createUser(request);
-        return new ResponseEntity<>(UserPersistResponse.of(userId), HttpStatus.CREATED);
+        UserPersistResponse response = userService.createUser(request);
+        return ResponseEntity.status(CREATED).body(response);
     }
-
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<Map<String, String>> handleIllegalArgumentException(IllegalArgumentException ex) {
-        Map<String, String> errorResponse = new HashMap<>();
-        errorResponse.put("code", "USERNAME_DUPLICATE");
-        errorResponse.put("message", ex.getMessage());  // 예외 메시지 사용 ("이미 존재하는 아이디입니다.")
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-    }
-
-
 }
 

@@ -3,36 +3,37 @@ package goorm.unit.booklog.domain.user.application;
 import goorm.unit.booklog.domain.user.domain.User;
 import goorm.unit.booklog.domain.user.presentation.request.UserCreateRequest;
 import goorm.unit.booklog.domain.user.domain.UserRepository;
+import goorm.unit.booklog.domain.user.presentation.exception.UserIdDuplicatedException;
+import goorm.unit.booklog.domain.user.presentation.response.UserPersistResponse;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    // 아이디 중복 체크
-    public boolean isUsernameDuplicate(String id) {
-        return userRepository.existsById(id);
+    @Transactional
+    public UserPersistResponse createUser(UserCreateRequest request) {
+        validateIdDuplication(request.id());
+        User user = User.create(
+                request.id(),
+                request.name(),
+                bCryptPasswordEncoder.encode(request.password())
+        );
+        String id = userRepository.save(user).getId();
+        return UserPersistResponse.of(id);
     }
 
-    // 회원가입 로직
-    public String createUser(UserCreateRequest request) {
-
-        // 아이디 중복 체크
-        if (isUsernameDuplicate(request.getId())) {
-            throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
+    public void validateIdDuplication(String id) {
+        if(userRepository.existsById(id)) {
+            throw new UserIdDuplicatedException();
         }
-
-        // 비밀번호 암호화 후 저장
-        String encodedPassword = passwordEncoder.encode(request.getPassword());
-        User user = new User(request.getId(),request.getName(), encodedPassword);
-        userRepository.save(user);
-
-        return user.getId();
     }
+
 }
 
