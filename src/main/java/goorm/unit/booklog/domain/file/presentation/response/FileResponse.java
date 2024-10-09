@@ -33,4 +33,11 @@ public record FileResponse(
 			.physicalPath(endpoint + "/" + bucketName + "/" + file.getPhysicalPath())
 			.build();
 	}
+
+	public static FileResponse of(String logicalName, String physicalPath) {
+		return FileResponse.builder()
+			.logicalName(logicalName + " 대표 이미지")
+			.physicalPath(physicalPath)
+			.build();
+	}
 }
