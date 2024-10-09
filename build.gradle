@@ -48,6 +48,7 @@ dependencies {
   
 	implementation 'com.amazonaws:aws-java-sdk-s3:1.11.238'
 
+	implementation 'org.json:json:20210307'
 }
 
 tasks.named('test') {
