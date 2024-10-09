@@ -59,8 +59,10 @@ public class SecurityConfig {
 		"/error",
 		"/favicon.ico",
 		"/index.html",
+			"/api/v1/users/duplication",
 			"/api/v1/users/signup",
 			"/api/v1/auth/login"
+
 	};
 
 	CorsConfigurationSource corsConfigurationSource() {

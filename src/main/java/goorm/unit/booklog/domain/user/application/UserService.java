@@ -5,6 +5,7 @@ import goorm.unit.booklog.domain.user.presentation.request.UserCreateRequest;
 import goorm.unit.booklog.domain.user.domain.UserRepository;
 import goorm.unit.booklog.domain.user.presentation.exception.UserIdDuplicatedException;
 import goorm.unit.booklog.domain.user.presentation.exception.UserNotFoundException;
+import goorm.unit.booklog.domain.user.presentation.response.DuplicationCheckResponse;
 import goorm.unit.booklog.domain.user.presentation.response.UserPersistResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,6 @@ public class UserService {
 
     @Transactional
     public UserPersistResponse createUser(UserCreateRequest request) {
-        validateIdDuplication(request.id());
         User user = User.create(
                 request.id(),
                 request.name(),
@@ -30,10 +30,11 @@ public class UserService {
         return UserPersistResponse.of(id);
     }
 
-    public void validateIdDuplication(String id) {
+    public DuplicationCheckResponse validateIdDuplication(String id) {
         if(userRepository.existsById(id)) {
             throw new UserIdDuplicatedException();
         }
+        return DuplicationCheckResponse.of(id);
     }
 
     public User getUserById(String id) {
