@@ -54,11 +54,4 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
-sourceSets {
-	main {
-		java {
-			exclude 'goorm/unit/booklog/common/config/FileUploadConfig.java'
-			exclude 'goorm/unit/booklog/domain/file/**'
-		}
-	}
-}
+

@@ -2,9 +2,7 @@ package goorm.unit.booklog.domain.user.presentation;
 
 import goorm.unit.booklog.common.exception.ExceptionResponse;
 import goorm.unit.booklog.domain.user.application.UserService;
-import goorm.unit.booklog.domain.user.presentation.request.DuplicationCheckRequest;
 import goorm.unit.booklog.domain.user.presentation.request.UserCreateRequest;
-import goorm.unit.booklog.domain.user.presentation.response.DuplicationCheckResponse;
 import goorm.unit.booklog.domain.user.presentation.response.UserPersistResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -47,8 +45,7 @@ public class UserController {
     @ApiResponses({
             @ApiResponse(
                     responseCode="200",
-                    description="아이디 사용 가능",
-                    content=@Content(schema=@Schema(implementation = DuplicationCheckResponse.class))
+                    description="아이디 사용 가능"
             ),
             @ApiResponse(
                     responseCode="409",
@@ -57,11 +54,11 @@ public class UserController {
             )
     })
     @GetMapping("/duplication")
-    public ResponseEntity<DuplicationCheckResponse> checkUseridDuplication(
-            @Valid @RequestBody DuplicationCheckRequest request
+    public ResponseEntity<Void> checkUseridDuplication(
+            @RequestParam String id
     ) {
-        DuplicationCheckResponse response = userService.validateIdDuplication(request.id());
-        return ResponseEntity.status(OK).body(response);
+        userService.validateIdDuplication(id);
+        return ResponseEntity.status(OK).build();
     }
 }
 
