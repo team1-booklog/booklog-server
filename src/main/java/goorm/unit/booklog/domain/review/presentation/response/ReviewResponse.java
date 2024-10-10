@@ -27,7 +27,10 @@ public record ReviewResponse(
         String book_name,
 
         @Schema(description = "작성 일자", example = "-", requiredMode = NOT_REQUIRED)
-        LocalDateTime createdAt
+        LocalDateTime createdAt,
+
+        @Schema(description = "수정 일자", example = "-", requiredMode = NOT_REQUIRED)
+        LocalDateTime updatedAt
 ) {
 
     public static ReviewResponse of(Review review) {
@@ -37,7 +40,8 @@ public record ReviewResponse(
                 review.getUser().getName(),
                 review.getContent(),
                 review.getBook().getTitle(),
-                review.getCreatedAt()
+                review.getCreatedAt(),
+                review.getUpdatedAt()
         );
     }
 }

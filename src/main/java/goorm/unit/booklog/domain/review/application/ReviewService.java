@@ -51,4 +51,25 @@ public class ReviewService {
         Review review= reviewRepository.findById(id).orElseThrow(ReviewNotFoundException::new);
         return ReviewResponse.of(review);
     }
+
+    @Transactional
+    public ReviewResponse updateReview(Long id, ReviewCreateRequest request) {
+        Review review = reviewRepository.findById(id)
+                .orElseThrow(ReviewNotFoundException::new);
+        review.setTitle(request.title());
+        review.setContent(request.content());
+        review.setFile(File.of(request.title(),request.img()));
+        review.setBook(bookService.getBook(request.book_id()));
+
+        reviewRepository.save(review);
+
+        return ReviewResponse.of(review);
+    }
+
+    @Transactional
+    public void deleteReview(Long id) {
+        Review review = reviewRepository.findById(id).orElseThrow(ReviewNotFoundException::new);
+        review.setStatus("INACTIVE");
+    }
+
 }

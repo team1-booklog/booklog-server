@@ -55,4 +55,26 @@ public class ReviewController {
         ReviewResponse response = reviewService.getReview(review_id);
         return ResponseEntity.ok(response);
     }
+
+    @Operation(summary = "독후감 수정", description = "review_id에 일치하는 독후감을 수정합니다.")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "독후감 수정 성공",
+                    content = @Content(schema = @Schema(implementation = ReviewResponse.class))
+            )
+    })
+    @PutMapping("/{review_id}")
+    public ResponseEntity<ReviewResponse> updateReview(
+            @PathVariable @NotNull Long review_id, @Valid @RequestBody ReviewCreateRequest request) {
+        ReviewResponse response = reviewService.updateReview(review_id,request);
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/{review_id}")
+    public ResponseEntity<Void> deleteReview(@PathVariable @NotNull Long review_id){
+        reviewService.deleteReview(review_id);
+        return ResponseEntity.ok().build();
+    }
+
 }

@@ -10,13 +10,10 @@ import goorm.unit.booklog.domain.book.domain.Book;
 import goorm.unit.booklog.domain.file.domain.File;
 import goorm.unit.booklog.domain.user.domain.User;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
+@Setter
 @Entity
 @Builder
 @AllArgsConstructor
