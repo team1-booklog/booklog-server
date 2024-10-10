@@ -20,7 +20,6 @@ public class UserService {
 
     @Transactional
     public UserPersistResponse createUser(UserCreateRequest request) {
-        validateIdDuplication(request.id());
         User user = User.create(
                 request.id(),
                 request.name(),
@@ -30,7 +29,7 @@ public class UserService {
         return UserPersistResponse.of(id);
     }
 
-    public void validateIdDuplication(String id) {
+    public void validateIdDuplication (String id) {
         if(userRepository.existsById(id)) {
             throw new UserIdDuplicatedException();
         }

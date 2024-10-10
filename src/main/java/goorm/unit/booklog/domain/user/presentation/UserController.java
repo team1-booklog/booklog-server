@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,11 +30,6 @@ public class UserController {
                     responseCode="201",
                     description="유저 생성 성공",
                     content=@Content(schema=@Schema(implementation = UserPersistResponse.class))
-            ),
-            @ApiResponse(
-                    responseCode="409",
-                    description="유저 생성 성공",
-                    content=@Content(schema=@Schema(implementation = ExceptionResponse.class))
             )
     })
     @ResponseStatus(CREATED)
@@ -44,5 +40,26 @@ public class UserController {
         UserPersistResponse response = userService.createUser(request);
         return ResponseEntity.status(CREATED).body(response);
     }
+
+    @Operation(summary="아이디 중복 체크", description="아이디의 중복 여부를 체크합니다.")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode="200",
+                    description="아이디 사용 가능"
+            ),
+            @ApiResponse(
+                    responseCode="409",
+                    description="아이디 중복됨",
+                    content=@Content(schema=@Schema(implementation = ExceptionResponse.class))
+            )
+    })
+    @GetMapping("/duplication")
+    public ResponseEntity<Void> checkUseridDuplication(
+            @RequestParam String id
+    ) {
+        userService.validateIdDuplication(id);
+        return ResponseEntity.status(OK).build();
+    }
 }
+
 
