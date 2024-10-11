@@ -4,6 +4,7 @@ import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.NOT_REQUIR
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
 import goorm.unit.booklog.domain.book.domain.Book;
+import goorm.unit.booklog.domain.file.domain.File;
 import goorm.unit.booklog.domain.file.presentation.response.FileResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
@@ -28,6 +29,7 @@ public record BookResponse(
 		requiredMode = NOT_REQUIRED)
 	FileResponse file
 ) {
+
 	public static BookResponse from(Book book) {
 		return BookResponse.builder()
 			.id(book.getId())
@@ -38,13 +40,13 @@ public record BookResponse(
 			.build();
 	}
 
-	public static BookResponse of (Long id, String title, String author, String description, String physicalPath) {
+	public static BookResponse of (Long id, String title, String author, String description, File file) {
 		return BookResponse.builder()
 			.id(id)
 			.title(title)
 			.author(author)
 			.description(description)
-			.file(FileResponse.of(title, physicalPath))
+			.file(FileResponse.from(file))
 			.build();
 	}
 }

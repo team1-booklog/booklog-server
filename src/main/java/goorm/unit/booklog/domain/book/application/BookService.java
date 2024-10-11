@@ -3,7 +3,11 @@ package goorm.unit.booklog.domain.book.application;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import goorm.unit.booklog.domain.book.domain.Book;
+import goorm.unit.booklog.domain.file.domain.File;
+import goorm.unit.booklog.domain.file.infrastructure.FileRepository;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BookService {
 	private final BookRepository bookRepository;
+	private final FileRepository fileRepository;
 
 	@Value("${naver.api.clientId}")
 	private String clientId;
@@ -57,18 +62,43 @@ public class BookService {
 		List<BookResponse> bookResponses = new ArrayList<>();
 		for (int i = 0; i < items.length(); i++) {
 			JSONObject item = items.getJSONObject(i);
-			BookResponse bookResponse = BookResponse.of(
-				(long)(i + 1),
-				item.getString("title"),
-				item.getString("author"),
-				item.getString("description"),
-				item.getString("link")
-			);
+
+			Book book;
+			Long fileId;
+			String title = item.getString("title");
+			String author = item.getString("author");
+			String description=item.getString("description");
+			String link=item.getString("link");
+
+			Optional<Book> existingBook = bookRepository.findByTitleAndAuthor(title, author);
+
+			if (!existingBook.isPresent()) {
+				File file = File.of(title, link);
+
+				book = Book.create(
+						title,
+						author,
+						description,
+						file
+				);
+				bookRepository.save(book);
+			}
+			else{
+				book= existingBook.get();
+			}
+
+			BookResponse bookResponse = BookResponse.from(book);
 			bookResponses.add(bookResponse);
+
 		}
 
 		int total = jsonResponse.getInt("total");
 		return BookPageResponse.of(bookResponses, PageableResponse.of(PageRequest.of(page, size), (long)total));
 
 	}
+
+	public Book getBook(Long id) {
+		return bookRepository.findById(id).orElse(null);
+	}
+
 }
