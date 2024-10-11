@@ -18,6 +18,10 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
+  servlet:
+    multipart:
+      maxFileSize: 5MB
+
   data:
     redis:
       host: ${REDIS_HOST:localhost}
