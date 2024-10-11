@@ -2,6 +2,7 @@ package goorm.unit.booklog.domain.review.domain;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +14,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
-@Setter
 @Entity
 @Builder
 @AllArgsConstructor
@@ -34,8 +34,9 @@ public class Review extends BaseTimeEntity {
     @JoinColumn(name = "file_id")
     private File file;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 10)
-    private String status = "ACTIVE";
+    private ReviewStatus status = ReviewStatus.ACTIVE; // 기본값 설정
 
     @ManyToOne
     @JoinColumn(name = "user_id",referencedColumnName = "id") // 외래 키 설정
@@ -51,8 +52,19 @@ public class Review extends BaseTimeEntity {
                 .content(content)
                 .file(file)
                 .user(user)
-                .status("ACTIVE")
+                .status(ReviewStatus.ACTIVE)
                 .book(book)
                 .build();
+    }
+
+    public void updateReview( String title,String content,Book book ) {
+        this.title = title;
+        this.content = content;
+        this.book = book;
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public void updateStatus(ReviewStatus status) {
+        this.status = status;
     }
 }

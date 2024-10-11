@@ -33,4 +33,8 @@ public class File extends BaseTimeEntity {
 			.physicalPath(filePath)
 			.build();
 	}
+
+	public void updateFile(String filePath) {
+		this.physicalPath = filePath;
+	}
 }

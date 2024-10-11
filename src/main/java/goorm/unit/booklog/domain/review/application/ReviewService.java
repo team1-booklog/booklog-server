@@ -6,6 +6,7 @@ import goorm.unit.booklog.domain.book.infrastructure.BookRepositoryImpl;
 import goorm.unit.booklog.domain.file.domain.File;
 import goorm.unit.booklog.domain.review.domain.Review;
 import goorm.unit.booklog.domain.review.domain.ReviewRepository;
+import goorm.unit.booklog.domain.review.domain.ReviewStatus;
 import goorm.unit.booklog.domain.review.presentation.request.ReviewCreateRequest;
 import goorm.unit.booklog.domain.review.presentation.response.ReviewPersistResponse;
 import goorm.unit.booklog.domain.review.presentation.response.ReviewResponse;
@@ -56,12 +57,11 @@ public class ReviewService {
     public ReviewResponse updateReview(Long id, ReviewCreateRequest request) {
         Review review = reviewRepository.findById(id)
                 .orElseThrow(ReviewNotFoundException::new);
-        review.setTitle(request.title());
-        review.setContent(request.content());
-        review.setFile(File.of(request.title(),request.img()));
-        review.setBook(bookService.getBook(request.book_id()));
+        Book book = bookService.getBook(request.book_id());
+        review.updateReview(request.title(), request.content(),book);
 
-        reviewRepository.save(review);
+        File file=review.getFile();
+        file.updateFile(request.img());
 
         return ReviewResponse.of(review);
     }
@@ -69,7 +69,7 @@ public class ReviewService {
     @Transactional
     public void deleteReview(Long id) {
         Review review = reviewRepository.findById(id).orElseThrow(ReviewNotFoundException::new);
-        review.setStatus("INACTIVE");
+        review.updateStatus(ReviewStatus.INACTIVE);
     }
 
 }

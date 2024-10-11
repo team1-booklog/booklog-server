@@ -2,16 +2,17 @@ package goorm.unit.booklog.domain.review.presentation.response;
 
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.NOT_REQUIRED;
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
-import goorm.unit.booklog.domain.review.domain.Review;
 import io.swagger.v3.oas.annotations.media.Schema;
+import goorm.unit.booklog.domain.review.domain.Review;
+import org.springframework.format.annotation.DateTimeFormat;
+import java.time.format.DateTimeFormatter;
 
-import java.time.LocalDateTime;
 
 public record ReviewResponse(
         @Schema(
                 description = "게시물 썸네일",
                 example = "https://example.domain.com/files/example.jpg",
-                requiredMode = NOT_REQUIRED)
+                requiredMode = REQUIRED)
         String thumbImg,
 
         @Schema(description = "독후감 제목", example = "해리포터를 읽고", requiredMode = REQUIRED)
@@ -26,22 +27,24 @@ public record ReviewResponse(
         @Schema(description = "책 제목", example = "해리포터", requiredMode = NOT_REQUIRED)
         String book_name,
 
-        @Schema(description = "작성 일자", example = "-", requiredMode = NOT_REQUIRED)
-        LocalDateTime createdAt,
+        @Schema(description = "작성 일자", example = "2024-10-10", requiredMode = NOT_REQUIRED)
+        @DateTimeFormat(pattern = "yyyy-MM-dd")
+        String createdAt,
 
-        @Schema(description = "수정 일자", example = "-", requiredMode = NOT_REQUIRED)
-        LocalDateTime updatedAt
+        @Schema(description = "수정 일자", example = "2024-10-10", requiredMode = NOT_REQUIRED)
+        @DateTimeFormat(pattern = "yyyy-MM-dd")
+        String updatedAt
 ) {
-
     public static ReviewResponse of(Review review) {
+        DateTimeFormatter formatter=DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return new ReviewResponse(
                 review.getFile().getPhysicalPath(),
                 review.getTitle(),
                 review.getUser().getName(),
                 review.getContent(),
                 review.getBook().getTitle(),
-                review.getCreatedAt(),
-                review.getUpdatedAt()
-        );
+                review.getCreatedAt().format(formatter),
+                review.getUpdatedAt().format(formatter)
+                );
     }
 }
