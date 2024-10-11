@@ -27,7 +27,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BookService {
 	private final BookRepository bookRepository;
-	private final FileRepository fileRepository;
 
 	@Value("${naver.api.clientId}")
 	private String clientId;
@@ -64,23 +63,15 @@ public class BookService {
 			JSONObject item = items.getJSONObject(i);
 
 			Book book;
-			Long fileId;
 			String title = item.getString("title");
 			String author = item.getString("author");
 			String description=item.getString("description");
-			String link=item.getString("link");
+			String image = item.getString("image");
 
 			Optional<Book> existingBook = bookRepository.findByTitleAndAuthor(title, author);
-
-			if (!existingBook.isPresent()) {
-				File file = File.of(title, link);
-
-				book = Book.create(
-						title,
-						author,
-						description,
-						file
-				);
+			if (existingBook.isEmpty()) {
+				File file = File.of(title, image);
+				book = Book.create(title, author, description, file);
 				bookRepository.save(book);
 			}
 			else{
@@ -89,12 +80,9 @@ public class BookService {
 
 			BookResponse bookResponse = BookResponse.from(book);
 			bookResponses.add(bookResponse);
-
 		}
-
 		int total = jsonResponse.getInt("total");
 		return BookPageResponse.of(bookResponses, PageableResponse.of(PageRequest.of(page, size), (long)total));
-
 	}
 
 	public Book getBookById(Long id) {
