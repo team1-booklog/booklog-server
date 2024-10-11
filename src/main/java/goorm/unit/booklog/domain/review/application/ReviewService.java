@@ -35,7 +35,6 @@ public class ReviewService {
     private final UserService userService;
     private final BookService bookService;
     private final FileService fileService;
-    private final BookRepository bookRepository;
 
     @Transactional
     public ReviewPersistResponse createReview(MultipartFile file, ReviewCreateRequest request) {
@@ -84,8 +83,9 @@ public class ReviewService {
         return reviewRepository.findById(id).orElseThrow(ReviewNotFoundException::new);
     }
 
+    @Transactional
     public ReviewListResponse getReviewListByBook(Long bookId) {
-        Book book=bookRepository.findById(bookId).orElseThrow(BookNotFoundException::new);
+        Book book=bookService.getBookById(bookId);
         List<Review> reviews=reviewRepository.findAllByBook(book);
         List<ReviewResponse> reviewResponses=new ArrayList<>();
         for(Review review:reviews) {

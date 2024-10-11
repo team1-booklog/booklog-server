@@ -58,6 +58,4 @@ public class BookController {
 		UserBookListResponse response = bookService.getMyBookList();
 		return ResponseEntity.ok(response);
 	}
-
-
 }

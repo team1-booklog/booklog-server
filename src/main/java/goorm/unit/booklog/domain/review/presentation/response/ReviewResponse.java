@@ -56,7 +56,7 @@ public record ReviewResponse(
         return ReviewResponse.builder()
             .id(review.getId())
             .title(review.getTitle())
-            .name(review.getUser().getUsername())
+            .name(review.getUser().getName())
                 .userId(review.getUser().getId())
             .content(review.getContent())
             .file(review.getFile() != null ? FileResponse.from(review.getFile()) : null)

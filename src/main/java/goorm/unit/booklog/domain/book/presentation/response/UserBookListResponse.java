@@ -9,10 +9,16 @@ import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
 
 @Builder
 public record UserBookListResponse(
-        @Schema
+        @Schema(description = "유저 아이디", example = "id1234", requiredMode = REQUIRED)
+        String userId,
+
+        @Schema(description = "유저 이름", example = "홍길동", requiredMode = REQUIRED)
+        String userName,
+
+        @Schema(description = "읽은 책 수", example = "1", requiredMode = REQUIRED)
         Integer bookCount,
 
-        @Schema
+        @Schema(description = "작성한 독후감 수", example = "1", requiredMode = REQUIRED)
         Integer reviewCount,
 
         @Schema(
@@ -22,8 +28,10 @@ public record UserBookListResponse(
         )
         List<BookResponse> bookResponses
 ) {
-        public static UserBookListResponse of(Integer bookCount, Integer reviewCount, List<BookResponse> bookResponses) {
+        public static UserBookListResponse of(String userId, String userName, Integer bookCount, Integer reviewCount, List<BookResponse> bookResponses) {
                 return UserBookListResponse.builder()
+                        .userId(userId)
+                        .userName(userName)
                         .bookCount(bookCount)
                         .reviewCount(reviewCount)
                         .bookResponses(bookResponses)

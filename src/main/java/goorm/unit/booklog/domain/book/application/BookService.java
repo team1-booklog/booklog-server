@@ -108,7 +108,7 @@ public class BookService {
 			BookResponse bookResponse = BookResponse.from(book);
 			bookResponses.add(bookResponse);
 		}
-		return UserBookListResponse.of(books.size(), reviews.size(),bookResponses);
+		return UserBookListResponse.of(user.getId(), user.getName(), books.size(), reviews.size(),bookResponses);
 	}
 
 }
