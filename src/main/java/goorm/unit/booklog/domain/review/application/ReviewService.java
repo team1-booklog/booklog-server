@@ -2,6 +2,7 @@ package goorm.unit.booklog.domain.review.application;
 
 import static goorm.unit.booklog.domain.review.domain.ReviewStatus.INACTIVE;
 
+import goorm.unit.booklog.domain.book.domain.Book;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,18 +32,25 @@ public class ReviewService {
     @Transactional
     public ReviewPersistResponse createReview(MultipartFile file, ReviewCreateRequest request) {
         User user = userService.me();
+        Book book= bookService.getBookById(request.bookId());
+
         File uploadedFile = null;
         if (file != null) {
             uploadedFile = fileService.uploadAndSaveFile(file);
         }
+
         Review review = Review.create(
                 request.title(),
                 request.content(),
                 uploadedFile,
                 user,
-                bookService.getBookById(request.bookId())
+                book
         );
+
         Long id = reviewRepository.save(review).getId();
+
+        user.updateReview(review);
+        user.updateBook(book);
         return ReviewPersistResponse.of(id);
     }
 

@@ -33,7 +33,6 @@ public class User extends BaseTimeEntity implements UserDetails {
         @Column(nullable=false)
         private String password;
 
-        //사용자 한명은 책 여러개 가능. 책 한개는 사용자 여러명 가능
         @ManyToMany
         @JoinTable(
             name = "user_books",
@@ -42,8 +41,7 @@ public class User extends BaseTimeEntity implements UserDetails {
         )
         private List<Book> books = new ArrayList<>();
 
-        //사용자 한명은 리뷰 여러개 가능. 리뷰 한개는 사용자 한명 가능.
-        @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+        @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
         private List<Review> reviews = new ArrayList<>();
 
         public static User create(String id, String name, String password) {
@@ -52,6 +50,14 @@ public class User extends BaseTimeEntity implements UserDetails {
                         .name(name)
                         .password(password)
                         .build();
+        }
+
+        public void updateBook(Book book) {
+                books.add(book);
+        }
+
+        public void updateReview(Review review) {
+                reviews.add(review);
         }
 
         @Override

@@ -1,6 +1,8 @@
 package goorm.unit.booklog.domain.book.domain;
 
+import goorm.unit.booklog.domain.user.domain.User;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface BookRepository {

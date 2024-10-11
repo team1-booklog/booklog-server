@@ -2,9 +2,11 @@ package goorm.unit.booklog.domain.review.infrastructure;
 
 import goorm.unit.booklog.domain.review.domain.Review;
 import goorm.unit.booklog.domain.review.domain.ReviewRepository;
+import goorm.unit.booklog.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
