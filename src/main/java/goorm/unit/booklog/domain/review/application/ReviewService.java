@@ -4,8 +4,6 @@ import static goorm.unit.booklog.domain.review.domain.ReviewStatus.ACTIVE;
 import static goorm.unit.booklog.domain.review.domain.ReviewStatus.INACTIVE;
 
 import goorm.unit.booklog.domain.book.domain.Book;
-import goorm.unit.booklog.domain.book.domain.BookRepository;
-import goorm.unit.booklog.domain.book.presentation.exception.BookNotFoundException;
 import goorm.unit.booklog.domain.review.presentation.response.ReviewListResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +37,7 @@ public class ReviewService {
     @Transactional
     public ReviewPersistResponse createReview(MultipartFile file, ReviewCreateRequest request) {
         User user = userService.me();
+        Book book=bookService.getBookById(request.bookId());
         File uploadedFile = null;
         if (file != null) {
             uploadedFile = fileService.uploadAndSaveFile(file);
@@ -48,9 +47,11 @@ public class ReviewService {
                 request.content(),
                 uploadedFile,
                 user,
-                bookService.getBookById(request.bookId())
+                book
         );
         Long id = reviewRepository.save(review).getId();
+        user.updateBook(book);
+        user.updateReview(review);
         return ReviewPersistResponse.of(id);
     }
 
