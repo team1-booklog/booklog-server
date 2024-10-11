@@ -25,7 +25,7 @@ public record ReviewResponse(
         String content,
 
         @Schema(description = "작성자 이름", example = "홍길동", requiredMode = REQUIRED)
-        String name,
+        String userName,
 
         @Schema(description = "작성자 아이디", example = "id1234", requiredMode = REQUIRED)
         String userId,
@@ -37,7 +37,7 @@ public record ReviewResponse(
         FileResponse file,
 
         @Schema(
-            description = "도서 목록",
+            description = "도서 정보",
             example = "{\"id\": 1, \"title\": \"스프링 부트와 AWS로 혼자 구현하는 웹 서비스\", \"author\": \"이동욱\", \"description\": \"스프링 부트와 AWS로 혼자 구현하는 웹 서비스\", \"file\": {\"id\": 1, \"logicalName\": \"example.jpg\", \"physicalPath\": \"https://example-bucket.ncp.com/files/example.jpg\"}}",
             requiredMode = REQUIRED
         )
@@ -56,7 +56,7 @@ public record ReviewResponse(
         return ReviewResponse.builder()
             .id(review.getId())
             .title(review.getTitle())
-            .name(review.getUser().getUsername())
+            .userName(review.getUser().getUsername())
                 .userId(review.getUser().getId())
             .content(review.getContent())
             .file(review.getFile() != null ? FileResponse.from(review.getFile()) : null)

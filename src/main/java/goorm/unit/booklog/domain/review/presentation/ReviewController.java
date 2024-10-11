@@ -63,7 +63,7 @@ public class ReviewController {
         return ResponseEntity.status(CREATED).body(response);
     }
 
-    @Operation(summary = "독후감 조회", description = "review_id에 일치하는 독후감을 조회합니다.")
+    @Operation(summary = "독후감 조회", description = "reviewId에 일치하는 독후감을 조회합니다.")
     @ApiResponses({
         @ApiResponse(
             responseCode = "200",
@@ -84,7 +84,7 @@ public class ReviewController {
         return ResponseEntity.ok(response);
     }
 
-    @Operation(summary = "독후감 수정", description = "review_id에 일치하는 독후감을 수정합니다.")
+    @Operation(summary = "독후감 수정", description = "reviewId에 일치하는 독후감을 수정합니다.")
     @ApiResponses({
         @ApiResponse(
             responseCode = "200",
@@ -109,7 +109,7 @@ public class ReviewController {
         return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "독후감 삭제", description = "review_id에 일치하는 독후감을 삭제합니다.")
+    @Operation(summary = "독후감 삭제", description = "reviewId에 일치하는 독후감을 삭제합니다.")
     @ApiResponses({
         @ApiResponse(
             responseCode = "200",
@@ -132,7 +132,7 @@ public class ReviewController {
             @ApiResponse(
                     responseCode = "200",
                     description = "독후감 조회 성공",
-                    content = @Content(schema = @Schema(implementation = ReviewResponse.class))
+                    content = @Content(schema = @Schema(implementation = ReviewListResponse.class))
             ),
             @ApiResponse(
                     responseCode="404",

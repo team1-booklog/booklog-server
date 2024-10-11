@@ -1,8 +1,12 @@
 package goorm.unit.booklog.domain.review.presentation.response;
 
+import goorm.unit.booklog.domain.book.presentation.response.BookResponse;
+import goorm.unit.booklog.domain.file.presentation.response.FileResponse;
+import goorm.unit.booklog.domain.review.domain.Review;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static io.swagger.v3.oas.annotations.media.Schema.RequiredMode.REQUIRED;
@@ -25,4 +29,9 @@ public record ReviewListResponse (
                     "\"updatedAt\":\"2024-10-12\"}]", requiredMode = REQUIRED)
     List<ReviewResponse> reviews
 ){
+    public static ReviewListResponse of(List<ReviewResponse> reviews) {
+        return ReviewListResponse.builder()
+                .reviews(reviews)
+                .build();
+    }
 }
