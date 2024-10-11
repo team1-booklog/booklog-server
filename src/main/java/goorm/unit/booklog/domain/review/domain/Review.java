@@ -38,11 +38,11 @@ public class Review extends BaseTimeEntity {
     @JoinColumn(name = "file_id")
     private File file;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="book_id")
     private Book book;
 

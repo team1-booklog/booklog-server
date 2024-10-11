@@ -1,7 +1,12 @@
 package goorm.unit.booklog.domain.review.application;
 
+import static goorm.unit.booklog.domain.review.domain.ReviewStatus.ACTIVE;
 import static goorm.unit.booklog.domain.review.domain.ReviewStatus.INACTIVE;
 
+import goorm.unit.booklog.domain.book.domain.Book;
+import goorm.unit.booklog.domain.book.domain.BookRepository;
+import goorm.unit.booklog.domain.book.presentation.exception.BookNotFoundException;
+import goorm.unit.booklog.domain.review.presentation.response.ReviewListResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,6 +25,9 @@ import goorm.unit.booklog.domain.user.application.UserService;
 import goorm.unit.booklog.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ReviewService {
@@ -27,6 +35,7 @@ public class ReviewService {
     private final UserService userService;
     private final BookService bookService;
     private final FileService fileService;
+    private final BookRepository bookRepository;
 
     @Transactional
     public ReviewPersistResponse createReview(MultipartFile file, ReviewCreateRequest request) {
@@ -73,5 +82,18 @@ public class ReviewService {
 
     private Review getReviewById(Long id) {
         return reviewRepository.findById(id).orElseThrow(ReviewNotFoundException::new);
+    }
+
+    public ReviewListResponse getReviewListByBook(Long bookId) {
+        Book book=bookRepository.findById(bookId).orElseThrow(BookNotFoundException::new);
+        List<Review> reviews=reviewRepository.findAllByBook(book);
+        List<ReviewResponse> reviewResponses=new ArrayList<>();
+        for(Review review:reviews) {
+            if(review.getStatus().equals(ACTIVE)) {
+                ReviewResponse reviewResponse=ReviewResponse.of(review);
+                reviewResponses.add(reviewResponse);
+            }
+        }
+        return new ReviewListResponse(reviewResponses);
     }
 }
