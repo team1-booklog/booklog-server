@@ -36,17 +36,17 @@ public record BookResponse(
 			.title(book.getTitle())
 			.author(book.getAuthor())
 			.description(book.getDescription())
-			.file(FileResponse.from(book.getFile()))
+			.file(FileResponse.of(book.getTitle(), book.getFile()))
 			.build();
 	}
 
-	public static BookResponse of (Long id, String title, String author, String description, File file) {
+	public static BookResponse of(Long id, String title, String author, String description, File file) {
 		return BookResponse.builder()
 			.id(id)
 			.title(title)
 			.author(author)
 			.description(description)
-			.file(FileResponse.from(file))
+			.file(FileResponse.of(title, file.getPhysicalPath()))
 			.build();
 	}
 }

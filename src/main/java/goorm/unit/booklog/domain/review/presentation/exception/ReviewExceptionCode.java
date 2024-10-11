@@ -10,7 +10,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @Getter
 @AllArgsConstructor
 public enum ReviewExceptionCode implements ExceptionCode {
-    REVIEW_NOT_FOUND(NOT_FOUND, "독후감을 찾을 수 없습니다."),;
+    REVIEW_NOT_FOUND(NOT_FOUND, "해당 독후감이 존재하지 않습니다."),;
 
     private final HttpStatus status;
     private final String message;

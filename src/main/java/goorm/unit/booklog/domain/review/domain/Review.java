@@ -1,5 +1,6 @@
 package goorm.unit.booklog.domain.review.domain;
 
+import static goorm.unit.booklog.domain.review.domain.ReviewStatus.ACTIVE;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 import java.time.LocalDateTime;
@@ -30,34 +31,33 @@ public class Review extends BaseTimeEntity {
     @Column(nullable = false, length = 2000)
     private String content;
 
+    @Enumerated(EnumType.STRING)
+    private ReviewStatus status;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "file_id")
     private File file;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 10)
-    private ReviewStatus status = ReviewStatus.ACTIVE; // 기본값 설정
-
-    @ManyToOne
-    @JoinColumn(name = "user_id",referencedColumnName = "id") // 외래 키 설정
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="book_id")
     private Book book;
 
-    public static Review create( String title, String content, File file,User user, Book book ) {
+    public static Review create( String title, String content, File file, User user, Book book) {
         return Review.builder()
-                .title(title)
-                .content(content)
-                .file(file)
-                .user(user)
-                .status(ReviewStatus.ACTIVE)
-                .book(book)
-                .build();
+            .title(title)
+            .content(content)
+            .status(ACTIVE)
+            .file(file)
+            .user(user)
+            .book(book)
+            .build();
     }
 
-    public void updateTitle( String title) {
+    public void updateTitle(String title) {
         this.title = title;
     }
 
@@ -65,8 +65,8 @@ public class Review extends BaseTimeEntity {
         this.content = content;
     }
 
-    public void updateBook( Book book ) {
-        this.book = book;
+    public void updateFile(File file) {
+        this.file = file;
     }
 
     public void updateStatus(ReviewStatus status) {

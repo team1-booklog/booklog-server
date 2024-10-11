@@ -40,4 +40,11 @@ public record FileResponse(
 			.physicalPath(physicalPath)
 			.build();
 	}
+
+	public static FileResponse of (String title, File file) {
+		return FileResponse.builder()
+			.logicalName(title + " 대표 이미지")
+			.physicalPath(file.getPhysicalPath())
+			.build();
+	}
 }
