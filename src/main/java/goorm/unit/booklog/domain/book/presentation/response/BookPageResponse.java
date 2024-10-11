@@ -12,7 +12,7 @@ import lombok.Builder;
 public record BookPageResponse<T>(
 	@Schema(
 		description = "도서 목록",
-		example = "[{\"id\": 1, \"title\": \"스프링 부트와 AWS로 혼자 구현하는 웹 서비스\", \"author\": \"이한음\", \"description\": \"스프링 부트와 AWS로 혼자 구현하는 웹 서비스\", \"file\": {\"id\": 1, \"logicalName\": \"example.jpg\", \"physicalPath\": \"https://example-bucket.ncp.com/files/example.jpg\"}}]",
+		example = "[{\"id\": 1, \"title\": \"스프링 부트와 AWS로 혼자 구현하는 웹 서비스\", \"author\": \"이동욱\", \"description\": \"이 책은 스프링부트 입문자용 책입니다.\", \"file\": {\"id\": 1, \"logicalName\": \"example.jpg\", \"physicalPath\": \"https://example-bucket.ncp.com/files/example.jpg\"}}]",
 		requiredMode = REQUIRED
 	)
 	List<BookResponse> contents,

@@ -1,5 +1,6 @@
 package goorm.unit.booklog.domain.book.presentation;
 
+import goorm.unit.booklog.domain.book.presentation.response.UserBookListResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,6 +41,21 @@ public class BookController {
 		@Parameter(description = "키워드", example = "스프링", required = true) @RequestParam(value = "keyword") String keyword
 	) {
 		BookPageResponse response = bookService.searchBooks(page, size, keyword);
+		return ResponseEntity.ok(response);
+	}
+
+	@Operation(summary = "유저 활동 내역 조회", description = " 작성한 독후감의 수와 읽은 책의 수, 표지, 제목을 반환합니다.")
+	@ApiResponses({
+			@ApiResponse(
+					responseCode = "200",
+					description = "유저 활동 내역 조회 성공",
+					content = @Content(schema = @Schema(implementation = BookPageResponse.class))
+
+			)
+	})
+	@GetMapping("/me")
+	public ResponseEntity<UserBookListResponse> getMyBookList() {
+		UserBookListResponse response = bookService.getMyBookList();
 		return ResponseEntity.ok(response);
 	}
 }

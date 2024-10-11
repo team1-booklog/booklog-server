@@ -17,10 +17,10 @@ public record BookResponse(
 	@Schema(description = "도서 제목", example = "스프링 부트와 AWS로 혼자 구현하는 웹 서비스", requiredMode = REQUIRED)
 	String title,
 
-	@Schema(description = "도서 저자", example = "이한음", requiredMode = NOT_REQUIRED)
+	@Schema(description = "도서 저자", example = "이동욱", requiredMode = NOT_REQUIRED)
 	String author,
 
-	@Schema(description = "도서 설명", example = "스프링 부트와 AWS로 혼자 구현하는 웹 서비스", requiredMode = NOT_REQUIRED)
+	@Schema(description = "도서 설명", example = "이 책은 스프링 부트 입문자용 책입니다.", requiredMode = NOT_REQUIRED)
 	String description,
 
 	@Schema(

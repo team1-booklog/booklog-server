@@ -4,6 +4,7 @@ import goorm.unit.booklog.common.exception.ExceptionResponse;
 import goorm.unit.booklog.domain.review.application.ReviewService;
 import goorm.unit.booklog.domain.review.presentation.request.ReviewCreateRequest;
 import goorm.unit.booklog.domain.review.presentation.request.ReviewUpdateRequest;
+import goorm.unit.booklog.domain.review.presentation.response.ReviewListResponse;
 import goorm.unit.booklog.domain.review.presentation.response.ReviewPersistResponse;
 import goorm.unit.booklog.domain.review.presentation.response.ReviewResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,7 +15,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 
@@ -62,7 +62,7 @@ public class ReviewController {
         return ResponseEntity.status(CREATED).body(response);
     }
 
-    @Operation(summary = "독후감 조회", description = "review_id에 일치하는 독후감을 조회합니다.")
+    @Operation(summary = "독후감 조회", description = "reviewId에 일치하는 독후감을 조회합니다.")
     @ApiResponses({
         @ApiResponse(
             responseCode = "200",
@@ -83,7 +83,7 @@ public class ReviewController {
         return ResponseEntity.ok(response);
     }
 
-    @Operation(summary = "독후감 수정", description = "review_id에 일치하는 독후감을 수정합니다.")
+    @Operation(summary = "독후감 수정", description = "reviewId에 일치하는 독후감을 수정합니다.")
     @ApiResponses({
         @ApiResponse(
             responseCode = "200",
@@ -108,7 +108,7 @@ public class ReviewController {
         return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "독후감 삭제", description = "review_id에 일치하는 독후감을 삭제합니다.")
+    @Operation(summary = "독후감 삭제", description = "reviewId에 일치하는 독후감을 삭제합니다.")
     @ApiResponses({
         @ApiResponse(
             responseCode = "200",
@@ -124,5 +124,26 @@ public class ReviewController {
     public ResponseEntity<Void> deleteReview(@Parameter(description = "독후감 ID", example = "1", required = true) @PathVariable("reviewId") @Positive Long reviewId){
         reviewService.deleteReview(reviewId);
         return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "특정 도서에 대한 독후감 조회", description = "bookId에 일치하는 독후감을 조회합니다.")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "독후감 조회 성공",
+                    content = @Content(schema = @Schema(implementation = ReviewListResponse.class))
+            ),
+            @ApiResponse(
+                    responseCode="404",
+                    description="해당 도서에 대한 독후감이 존재하지 않습니다.",
+                    content=@Content(schema=@Schema(implementation = ExceptionResponse.class))
+            )
+    })
+    @GetMapping("/lists/{bookId}")
+    public ResponseEntity<ReviewListResponse> getReviewListByBook(
+            @Parameter(description = "책 ID", example = "1", required = true) @PathVariable("bookId") @Positive Long bookId
+    ) {
+        ReviewListResponse response = reviewService.getReviewListByBook(bookId);
+        return ResponseEntity.ok(response);
     }
 }

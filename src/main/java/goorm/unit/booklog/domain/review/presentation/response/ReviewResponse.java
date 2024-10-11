@@ -18,24 +18,27 @@ public record ReviewResponse(
         @Schema(description = "독후감 ID", example = "1", requiredMode = REQUIRED)
         Long id,
 
-        @Schema(description = "독후감 제목", example = "해리포터를 읽고", requiredMode = REQUIRED)
+        @Schema(description = "독후감 제목", example = "스프링 부트에 대한 책을 읽고", requiredMode = REQUIRED)
         String title,
 
-        @Schema(description = "독후감 본문", example = "이번 기회에 해리포터라는 책을 읽게 되었다.", requiredMode = NOT_REQUIRED)
+        @Schema(description = "독후감 본문", example = "유익한 책이었다.", requiredMode = NOT_REQUIRED)
         String content,
 
         @Schema(description = "작성자 이름", example = "홍길동", requiredMode = REQUIRED)
         String name,
 
+        @Schema(description = "작성자 아이디", example = "id1234", requiredMode = REQUIRED)
+        String userId,
+
         @Schema(
-            description = "독후감 사진",
-            example = "{\"id\": 1, \"logicalName\": \"example.jpg\", \"physicalPath\": \"https://example-bucket.ncp.com/files/example.jpg\"}",
+            description = "독후감 썸네일 사진",
+            example = "{\"id\": 1, \"logicalName\": \"독후감 썸네일 사진.jpg\", \"physicalPath\": \"https://example-domain.com/files/example.jpg\"}",
             requiredMode = NOT_REQUIRED)
         FileResponse file,
 
         @Schema(
             description = "도서 목록",
-            example = "{\"id\": 1, \"title\": \"스프링 부트와 AWS로 혼자 구현하는 웹 서비스\", \"author\": \"이한음\", \"description\": \"스프링 부트와 AWS로 혼자 구현하는 웹 서비스\", \"file\": {\"id\": 1, \"logicalName\": \"example.jpg\", \"physicalPath\": \"https://example-bucket.ncp.com/files/example.jpg\"}}",
+            example = "{\"id\": 1, \"title\": \"스프링 부트와 AWS로 혼자 구현하는 웹 서비스\", \"author\": \"이동욱\", \"description\": \"스프링 부트와 AWS로 혼자 구현하는 웹 서비스\", \"file\": {\"id\": 1, \"logicalName\": \"example.jpg\", \"physicalPath\": \"https://example-bucket.ncp.com/files/example.jpg\"}}",
             requiredMode = REQUIRED
         )
         BookResponse book,
@@ -54,6 +57,7 @@ public record ReviewResponse(
             .id(review.getId())
             .title(review.getTitle())
             .name(review.getUser().getName())
+                .userId(review.getUser().getId())
             .content(review.getContent())
             .file(review.getFile() != null ? FileResponse.from(review.getFile()) : null)
             .book(BookResponse.from(review.getBook()))

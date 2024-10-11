@@ -6,14 +6,19 @@ import java.util.List;
 import java.util.Optional;
 
 import goorm.unit.booklog.domain.book.domain.Book;
+import goorm.unit.booklog.domain.book.presentation.response.UserBookListResponse;
 import goorm.unit.booklog.domain.file.domain.File;
-import goorm.unit.booklog.domain.file.infrastructure.FileRepository;
+import goorm.unit.booklog.domain.review.domain.ReviewRepository;
+import goorm.unit.booklog.domain.review.domain.Review;
+import goorm.unit.booklog.domain.user.application.UserService;
+import goorm.unit.booklog.domain.user.domain.User;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.RequestEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -27,6 +32,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BookService {
 	private final BookRepository bookRepository;
+	private final UserService userService;
+	private final ReviewRepository reviewRepository;
 
 	@Value("${naver.api.clientId}")
 	private String clientId;
@@ -87,6 +94,21 @@ public class BookService {
 
 	public Book getBookById(Long id) {
 		return bookRepository.findById(id).orElse(null);
+	}
+
+	@Transactional
+	public UserBookListResponse getMyBookList() {
+		User user=userService.me();
+		List<Book> books=user.getBooks();
+		List<Review> reviews=user.getReviews();
+
+		List<BookResponse> bookResponses = new ArrayList<>();
+
+		for (Book book : books) {
+			BookResponse bookResponse = BookResponse.from(book);
+			bookResponses.add(bookResponse);
+		}
+		return UserBookListResponse.of(user.getId(), user.getName(), books.size(), reviews.size(),bookResponses);
 	}
 
 }
