@@ -31,6 +31,9 @@ public record BookResponse(
 ) {
 
 	public static BookResponse from(Book book) {
+		if (book == null) {
+			throw new IllegalArgumentException("Book 객체는 null일 수 없습니다.");
+		}
 		return BookResponse.builder()
 			.id(book.getId())
 			.title(book.getTitle())
