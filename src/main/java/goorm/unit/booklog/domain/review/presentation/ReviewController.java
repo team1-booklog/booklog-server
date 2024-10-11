@@ -77,7 +77,7 @@ public class ReviewController {
                     content=@Content(schema=@Schema(implementation = ExceptionResponse.class))
             )
     })
-    @PutMapping("/{reviewId}")
+    @PatchMapping("/{reviewId}")
     public ResponseEntity<ReviewResponse> updateReview(
             @Parameter(description = "독후감 ID", example = "1", required = true) @PathVariable("reviewId") @Positive Long reviewId,
             @Valid @RequestBody ReviewCreateRequest request) {
@@ -97,7 +97,7 @@ public class ReviewController {
                     content=@Content(schema=@Schema(implementation = ExceptionResponse.class))
             )
     })
-    @PatchMapping("/{reviewId}")
+    @PatchMapping("/delete/{reviewId}")
     public ResponseEntity<Void> deleteReview(@Parameter(description = "독후감 ID", example = "1", required = true) @PathVariable("reviewId") @Positive Long reviewId){
         reviewService.deleteReview(reviewId);
         return ResponseEntity.ok().build();

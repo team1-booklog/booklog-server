@@ -58,7 +58,9 @@ public class ReviewService {
         Review review = reviewRepository.findById(id)
                 .orElseThrow(ReviewNotFoundException::new);
         Book book = bookService.getBook(request.book_id());
-        review.updateReview(request.title(), request.content(),book);
+        review.updateTitle(request.title());
+        review.updateContent(request.content());
+        review.updateBook(book);
 
         File file=review.getFile();
         file.updateFile(request.img());

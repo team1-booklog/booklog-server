@@ -57,11 +57,16 @@ public class Review extends BaseTimeEntity {
                 .build();
     }
 
-    public void updateReview( String title,String content,Book book ) {
+    public void updateTitle( String title) {
         this.title = title;
+    }
+
+    public void updateContent(String content) {
         this.content = content;
+    }
+
+    public void updateBook( Book book ) {
         this.book = book;
-        this.updatedAt = LocalDateTime.now();
     }
 
     public void updateStatus(ReviewStatus status) {
