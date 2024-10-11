@@ -39,7 +39,7 @@ public class Book extends BaseTimeEntity {
 	@Column(nullable = false)
 	private String author;
 
-	@Column(nullable = false, length = 1000)
+	@Column(nullable = false, length = 2000)
 	private String description;
 
 	@OneToOne(cascade = CascadeType.ALL)

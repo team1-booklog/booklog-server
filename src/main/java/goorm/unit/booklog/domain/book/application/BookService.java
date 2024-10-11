@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import goorm.unit.booklog.domain.book.domain.Book;
 import goorm.unit.booklog.domain.file.domain.File;
+import goorm.unit.booklog.domain.file.infrastructure.FileRepository;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BookService {
 	private final BookRepository bookRepository;
+	private final FileRepository fileRepository;
 
 	@Value("${naver.api.clientId}")
 	private String clientId;
@@ -61,7 +63,8 @@ public class BookService {
 		for (int i = 0; i < items.length(); i++) {
 			JSONObject item = items.getJSONObject(i);
 
-			Long id;
+			Book book;
+			Long fileId;
 			String title = item.getString("title");
 			String author = item.getString("author");
 			String description=item.getString("description");
@@ -70,35 +73,23 @@ public class BookService {
 			Optional<Book> existingBook = bookRepository.findByTitleAndAuthor(title, author);
 
 			if (!existingBook.isPresent()) {
-				File file = File.of(
-						title, // logical name을 title로 지정하였음
-						link
-				);
+				File file = File.of(title, link);
 
-				Book book = Book.create(
+				book = Book.create(
 						title,
 						author,
 						description,
 						file
 				);
-
 				bookRepository.save(book);
-				id = book.getId();
 			}
 			else{
-				id = existingBook.get().getId();
+				book= existingBook.get();
 			}
 
-
-
-			BookResponse bookResponse = BookResponse.of(
-					id,
-					title,
-					author,
-					description,
-					link
-			);
+			BookResponse bookResponse = BookResponse.from(book);
 			bookResponses.add(bookResponse);
+
 		}
 
 		int total = jsonResponse.getInt("total");
@@ -106,7 +97,7 @@ public class BookService {
 
 	}
 
-	public Book getBook(long id) {
+	public Book getBook(Long id) {
 		return bookRepository.findById(id).orElse(null);
 	}
 

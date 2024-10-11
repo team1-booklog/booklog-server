@@ -31,11 +31,8 @@ public class ReviewService {
     @Transactional
     public ReviewPersistResponse createReview(ReviewCreateRequest request) {
         User user = userService.me();
-        File file=File.of(
-                request.title(),
-                request.img()
-        );
-        Book book = bookService.getBook(request.book_id());
+        File file=File.of(request.title(), request.img());
+        Book book = bookService.getBook(request.bookResponse().id());
         Review review = Review.create(
                 request.title(),
                 request.content(),
@@ -57,7 +54,7 @@ public class ReviewService {
     public ReviewResponse updateReview(Long id, ReviewCreateRequest request) {
         Review review = reviewRepository.findById(id)
                 .orElseThrow(ReviewNotFoundException::new);
-        Book book = bookService.getBook(request.book_id());
+        Book book = bookService.getBook(request.bookResponse().id());
         review.updateTitle(request.title());
         review.updateContent(request.content());
         review.updateBook(book);

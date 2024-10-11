@@ -1,6 +1,13 @@
 package goorm.unit.booklog.domain.review.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
 public enum ReviewStatus {
-    ACTIVE,
-    INACTIVE
+    ACTIVE("활성화된 게시물 입니다."),
+    INACTIVE("삭제된 게시물 입니다.");
+
+    private final String description;
 }
