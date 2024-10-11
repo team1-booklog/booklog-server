@@ -1,44 +1,46 @@
 package goorm.unit.booklog.domain.review.application;
 
+import static goorm.unit.booklog.domain.review.domain.ReviewStatus.INACTIVE;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
 import goorm.unit.booklog.domain.book.application.BookService;
-import goorm.unit.booklog.domain.book.domain.Book;
-import goorm.unit.booklog.domain.book.infrastructure.BookRepositoryImpl;
+import goorm.unit.booklog.domain.file.application.FileService;
 import goorm.unit.booklog.domain.file.domain.File;
 import goorm.unit.booklog.domain.review.domain.Review;
 import goorm.unit.booklog.domain.review.domain.ReviewRepository;
-import goorm.unit.booklog.domain.review.domain.ReviewStatus;
+import goorm.unit.booklog.domain.review.presentation.exception.ReviewNotFoundException;
 import goorm.unit.booklog.domain.review.presentation.request.ReviewCreateRequest;
+import goorm.unit.booklog.domain.review.presentation.request.ReviewUpdateRequest;
 import goorm.unit.booklog.domain.review.presentation.response.ReviewPersistResponse;
 import goorm.unit.booklog.domain.review.presentation.response.ReviewResponse;
 import goorm.unit.booklog.domain.user.application.UserService;
 import goorm.unit.booklog.domain.user.domain.User;
-import goorm.unit.booklog.domain.review.presentation.exception.ReviewNotFoundException;
-
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-
 
 @Service
 @RequiredArgsConstructor
 public class ReviewService {
     private final ReviewRepository reviewRepository;
-    private final BookRepositoryImpl bookRepository;
     private final UserService userService;
     private final BookService bookService;
+    private final FileService fileService;
 
     @Transactional
-    public ReviewPersistResponse createReview(ReviewCreateRequest request) {
+    public ReviewPersistResponse createReview(MultipartFile file, ReviewCreateRequest request) {
         User user = userService.me();
-        File file=File.of(request.title(), request.img());
-        Book book = bookService.getBook(request.bookResponse().id());
+        File uploadedFile = null;
+        if (file != null) {
+            uploadedFile = fileService.uploadAndSaveFile(file);
+        }
         Review review = Review.create(
                 request.title(),
                 request.content(),
-                file,
+                uploadedFile,
                 user,
-                book
+                bookService.getBookById(request.bookId())
         );
         Long id = reviewRepository.save(review).getId();
         return ReviewPersistResponse.of(id);
@@ -51,24 +53,25 @@ public class ReviewService {
     }
 
     @Transactional
-    public ReviewResponse updateReview(Long id, ReviewCreateRequest request) {
-        Review review = reviewRepository.findById(id)
-                .orElseThrow(ReviewNotFoundException::new);
-        Book book = bookService.getBook(request.bookResponse().id());
+    public void updateReview(Long id, MultipartFile file, ReviewUpdateRequest request) {
+        Review review = getReviewById(id);
         review.updateTitle(request.title());
         review.updateContent(request.content());
-        review.updateBook(book);
 
-        File file=review.getFile();
-        file.updateFile(request.img());
-
-        return ReviewResponse.of(review);
+        File uploadedFile = null;
+        if (file != null) {
+            uploadedFile = fileService.uploadAndSaveFile(file);
+        }
+        review.updateFile(uploadedFile);
     }
 
     @Transactional
     public void deleteReview(Long id) {
-        Review review = reviewRepository.findById(id).orElseThrow(ReviewNotFoundException::new);
-        review.updateStatus(ReviewStatus.INACTIVE);
+        Review review = getReviewById(id);
+        review.updateStatus(INACTIVE);
     }
 
+    private Review getReviewById(Long id) {
+        return reviewRepository.findById(id).orElseThrow(ReviewNotFoundException::new);
+    }
 }
