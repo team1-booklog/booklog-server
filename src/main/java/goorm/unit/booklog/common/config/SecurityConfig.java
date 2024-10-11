@@ -78,7 +78,7 @@ public class SecurityConfig {
 			CorsConfiguration config = new CorsConfiguration();
 			config.setAllowedHeaders(Collections.singletonList("*"));
 			config.setAllowedMethods(Collections.singletonList("*"));
-			config.setAllowedOriginPatterns(Arrays.asList("http://localhost:5173"));
+			config.setAllowedOriginPatterns(Arrays.asList("http://localhost:5173","https://team1-booklog.vercel.app/"));
 			config.setAllowCredentials(true);
 			return config;
 		};
