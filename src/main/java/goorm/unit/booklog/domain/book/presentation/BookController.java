@@ -50,7 +50,7 @@ public class BookController {
 		@ApiResponse(
 			responseCode = "200",
 			description = "기본 도서 목록 조회 성공",
-			content = @Content(schema = @Schema(implementation = BookPageResponse.class))
+			content = @Content(schema = @Schema(implementation = BookListResponse.class))
 		)
 	})
 	@GetMapping
