@@ -18,7 +18,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import goorm.unit.booklog.common.auth.application.UserDetailService;
 import goorm.unit.booklog.common.auth.filter.TokenAuthenticationFilter;
@@ -75,20 +74,22 @@ public class SecurityConfig {
 		"/",
 	};
 
-	@Bean
-	public CorsConfigurationSource corsConfigurationSource() {
-		CorsConfiguration config = new CorsConfiguration();
-		config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With", "*"));
-		config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-		config.setAllowedOriginPatterns(Arrays.asList(
-			"http://localhost:5173",
-			"https://team1-booklog.vercel.app/",
-			"https://api-booklog.ezbooks.kr/"
-		));
-		config.setAllowCredentials(true);
-		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/**", config);
-		return source;
+	CorsConfigurationSource corsConfigurationSource() {
+		return request -> {
+			CorsConfiguration config = new CorsConfiguration();
+			config.setAllowedHeaders(Collections.singletonList("*"));
+			config.setAllowedMethods(Collections.singletonList("*"));
+			config.setAllowedOriginPatterns(
+				Arrays.asList(
+					"http://localhost:5173",
+					"https://team1-booklog.vercel.app/",
+					"http://58.238.255.245:8080/",
+					"http://api-booklog.ezbooks.kr/",
+					"https://api-booklog.ezbooks.kr/"
+				));
+			config.setAllowCredentials(true);
+			return config;
+		};
 	}
 
 	@Bean

@@ -81,12 +81,11 @@ public class BookController {
 
 	@Operation(summary = "유저 활동 내역 조회", description = " 작성한 독후감의 수와 읽은 책의 수, 표지, 제목을 반환합니다.")
 	@ApiResponses({
-			@ApiResponse(
-					responseCode = "200",
-					description = "유저 활동 내역 조회 성공",
-					content = @Content(schema = @Schema(implementation = BookPageResponse.class))
-
-			)
+		@ApiResponse(
+			responseCode = "200",
+			description = "유저 활동 내역 조회 성공",
+			content = @Content(schema = @Schema(implementation = UserBookListResponse.class))
+		)
 	})
 	@GetMapping("/me")
 	public ResponseEntity<UserBookListResponse> getMyBookList() {
