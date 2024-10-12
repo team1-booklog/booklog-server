@@ -139,7 +139,7 @@ public class ReviewController {
                     content=@Content(schema=@Schema(implementation = ExceptionResponse.class))
             )
     })
-    @GetMapping("/lists/{bookId}")
+    @GetMapping("/list/{bookId}")
     public ResponseEntity<ReviewListResponse> getReviewListByBook(
             @Parameter(description = "책 ID", example = "1", required = true) @PathVariable("bookId") @Positive Long bookId
     ) {
