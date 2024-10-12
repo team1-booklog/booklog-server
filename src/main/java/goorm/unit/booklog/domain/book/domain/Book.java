@@ -39,8 +39,10 @@ public class Book extends BaseTimeEntity {
 	@Column(nullable = false)
 	private String author;
 
-	@Column(nullable = false, length = 2000)
+	@Column(length = 2000)
 	private String description;
+
+	private String isbn;
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "file_id")
@@ -49,11 +51,12 @@ public class Book extends BaseTimeEntity {
 	@ManyToMany(mappedBy = "books")
 	private List<User> users = new ArrayList<>();
 
-	public static Book create(String title, String author, String description, File file) {
+	public static Book create(String title, String author, String description, String isbn, File file) {
 		return Book.builder()
 			.title(title)
 			.author(author)
 			.description(description)
+			.isbn(isbn)
 			.file(file)
 			.build();
 	}
