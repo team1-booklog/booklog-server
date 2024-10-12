@@ -7,14 +7,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import goorm.unit.booklog.domain.book.domain.Book;
-import goorm.unit.booklog.domain.book.presentation.response.BookListResponse;
-import goorm.unit.booklog.domain.book.presentation.response.UserBookListResponse;
-import goorm.unit.booklog.domain.file.domain.File;
-import goorm.unit.booklog.domain.review.domain.ReviewRepository;
-import goorm.unit.booklog.domain.review.domain.Review;
-import goorm.unit.booklog.domain.user.application.UserService;
-import goorm.unit.booklog.domain.user.domain.User;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,9 +18,18 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import goorm.unit.booklog.common.response.PageableResponse;
+import goorm.unit.booklog.domain.book.domain.Book;
 import goorm.unit.booklog.domain.book.domain.BookRepository;
+import goorm.unit.booklog.domain.book.presentation.exception.BookNotFoundException;
+import goorm.unit.booklog.domain.book.presentation.response.BookListResponse;
 import goorm.unit.booklog.domain.book.presentation.response.BookPageResponse;
 import goorm.unit.booklog.domain.book.presentation.response.BookResponse;
+import goorm.unit.booklog.domain.book.presentation.response.BookSummaryResponse;
+import goorm.unit.booklog.domain.book.presentation.response.UserBookListResponse;
+import goorm.unit.booklog.domain.file.domain.File;
+import goorm.unit.booklog.domain.review.domain.Review;
+import goorm.unit.booklog.domain.user.application.UserService;
+import goorm.unit.booklog.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -104,6 +105,10 @@ public class BookService {
 		return BookListResponse.of(randomBooks);
 	}
 
+	public BookSummaryResponse getBookIdByIsbn(String isbn) {
+		Book book = bookRepository.findByIsbn(isbn).orElseThrow(BookNotFoundException::new);
+		return BookSummaryResponse.from(book);
+	}
 
 	public Book getBookById(Long id) {
 		return bookRepository.findById(id).orElse(null);

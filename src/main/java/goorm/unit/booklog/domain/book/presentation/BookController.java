@@ -1,9 +1,11 @@
 package goorm.unit.booklog.domain.book.presentation;
 
 import goorm.unit.booklog.domain.book.presentation.response.BookListResponse;
+import goorm.unit.booklog.domain.book.presentation.response.BookSummaryResponse;
 import goorm.unit.booklog.domain.book.presentation.response.UserBookListResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -58,6 +60,22 @@ public class BookController {
 		@Parameter(description = "응답 개수", example = "10", required = true) @RequestParam(value = "size", defaultValue = "10") int size
 	) {
 		BookListResponse response = bookService.getDefaultBookList(size);
+		return ResponseEntity.ok(response);
+	}
+
+	@Operation(summary = "isbn에 해당하는 도서 ID 반환", description = "isbn에 해당하는 도서 ID를 반환합니다.")
+	@ApiResponses({
+		@ApiResponse(
+			responseCode = "200",
+			description = "isbn에 해당하는 도서 ID 반환 성공",
+			content = @Content(schema = @Schema(implementation = BookSummaryResponse.class))
+		)
+	})
+	@GetMapping("/{isbn}")
+	public ResponseEntity<BookSummaryResponse> getBookIdByIsbn(
+		@Parameter(description = "isbn", example = "9788953583979", required = true) @PathVariable(value = "isbn") String isbn
+	) {
+		BookSummaryResponse response = bookService.getBookIdByIsbn(isbn);
 		return ResponseEntity.ok(response);
 	}
 
