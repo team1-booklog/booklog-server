@@ -13,4 +13,5 @@ public interface BookRepository {
 
     Optional<Book> findByTitleAndAuthor(String title, String author);
 
+    List<Book> findAll();
 }

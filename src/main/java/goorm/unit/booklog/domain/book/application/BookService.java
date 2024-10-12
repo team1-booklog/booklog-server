@@ -2,10 +2,13 @@ package goorm.unit.booklog.domain.book.application;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import goorm.unit.booklog.domain.book.domain.Book;
+import goorm.unit.booklog.domain.book.presentation.response.BookListResponse;
 import goorm.unit.booklog.domain.book.presentation.response.UserBookListResponse;
 import goorm.unit.booklog.domain.file.domain.File;
 import goorm.unit.booklog.domain.review.domain.ReviewRepository;
@@ -33,7 +36,6 @@ import lombok.RequiredArgsConstructor;
 public class BookService {
 	private final BookRepository bookRepository;
 	private final UserService userService;
-	private final ReviewRepository reviewRepository;
 
 	@Value("${naver.api.clientId}")
 	private String clientId;
@@ -92,6 +94,16 @@ public class BookService {
 		int total = jsonResponse.getInt("total");
 		return BookPageResponse.of(bookResponses, PageableResponse.of(PageRequest.of(page, size), (long)total));
 	}
+
+	public BookListResponse getDefaultBookList(int size) {
+		List<Book> books = bookRepository.findAll();
+		Collections.shuffle(books);
+		List<Book> randomBooks = books.stream()
+			.limit(size)
+			.collect(Collectors.toList());
+		return BookListResponse.of(randomBooks);
+	}
+
 
 	public Book getBookById(Long id) {
 		return bookRepository.findById(id).orElse(null);
