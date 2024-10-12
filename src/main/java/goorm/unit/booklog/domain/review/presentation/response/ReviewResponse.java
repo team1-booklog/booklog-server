@@ -56,7 +56,7 @@ public record ReviewResponse(
             .name(review.getUser().getName())
             .content(review.getContent())
             .file(review.getFile() != null ? FileResponse.from(review.getFile()) : null)
-            .book(BookResponse.from(review.getBook()))
+                .book(review.getBook() != null ? BookResponse.from(review.getBook()) : null)
             .createdAt(review.getCreatedAt().format(formatter))
             .updatedAt(review.getUpdatedAt().format(formatter))
             .build();
