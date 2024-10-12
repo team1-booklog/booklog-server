@@ -11,6 +11,8 @@ public interface BookRepository {
 
     Optional<Book> findById(Long id);
 
+    Optional<Book> findByIsbn(String isbn);
+
     Optional<Book> findByTitleAndAuthor(String title, String author);
 
     List<Book> findAll();
