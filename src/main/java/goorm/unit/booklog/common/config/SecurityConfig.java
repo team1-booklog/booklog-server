@@ -68,6 +68,8 @@ public class SecurityConfig {
 		"/api/v1/users/signup",
 		"/api/v1/auth/login",
 		"/api/v1/users/duplication",
+		"/api/v1/books/**",
+		"/api/v1/reviews/list/**",
 		"/error",
 		"/favicon.ico",
 		"/index.html",
