@@ -74,11 +74,12 @@ public class BookService {
 			String author = item.getString("author");
 			String description=item.getString("description");
 			String image = item.getString("image");
+			String isbn = item.getString("isbn");
 
 			Optional<Book> existingBook = bookRepository.findByTitleAndAuthor(title, author);
 			if (existingBook.isEmpty()) {
 				File file = File.of(title, image);
-				book = Book.create(title, author, description, file);
+				book = Book.create(title, author, description, isbn, file);
 				bookRepository.save(book);
 			}
 			else{

@@ -23,6 +23,9 @@ public record BookResponse(
 	@Schema(description = "도서 설명", example = "이 책은 스프링 부트 입문자용 책입니다.", requiredMode = NOT_REQUIRED)
 	String description,
 
+	@Schema(description = "도서 ISBN", example = "9791158392239", requiredMode = NOT_REQUIRED)
+	String isbn,
+
 	@Schema(
 		description = "파일 정보",
 		example = "{\"id\": 1, \"logicalName\": \"example.jpg\", \"physicalPath\": \"https://example-bucket.ncp.com/files/example.jpg\"}",
@@ -31,25 +34,13 @@ public record BookResponse(
 ) {
 
 	public static BookResponse from(Book book) {
-		if (book == null) {
-			throw new IllegalArgumentException("Book 객체는 null일 수 없습니다.");
-		}
 		return BookResponse.builder()
 			.id(book.getId())
 			.title(book.getTitle())
 			.author(book.getAuthor())
 			.description(book.getDescription())
+			.isbn(book.getIsbn())
 			.file(FileResponse.of(book.getTitle(), book.getFile()))
-			.build();
-	}
-
-	public static BookResponse of(Long id, String title, String author, String description, File file) {
-		return BookResponse.builder()
-			.id(id)
-			.title(title)
-			.author(author)
-			.description(description)
-			.file(FileResponse.of(title, file.getPhysicalPath()))
 			.build();
 	}
 }
