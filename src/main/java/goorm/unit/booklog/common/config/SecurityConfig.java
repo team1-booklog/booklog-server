@@ -83,8 +83,6 @@ public class SecurityConfig {
 				Arrays.asList(
 					"http://localhost:5173",
 					"https://team1-booklog.vercel.app/",
-					"http://58.238.255.245:8080/",
-					"http://api-booklog.ezbooks.kr/",
 					"https://api-booklog.ezbooks.kr/"
 				));
 			config.setAllowCredentials(true);
