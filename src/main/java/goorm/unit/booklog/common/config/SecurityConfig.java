@@ -65,12 +65,13 @@ public class SecurityConfig {
 	};
 
 	private static final String[] PERMIT_ALL_PATTERNS = {
-		"/error",
-		"/favicon.ico",
-		"/index.html",
 		"/api/v1/users/signup",
 		"/api/v1/auth/login",
 		"/api/v1/users/duplication",
+		"/error",
+		"/favicon.ico",
+		"/index.html",
+		"/",
 	};
 
 	CorsConfigurationSource corsConfigurationSource() {
