@@ -65,12 +65,13 @@ public class SecurityConfig {
 	};
 
 	private static final String[] PERMIT_ALL_PATTERNS = {
-		"/error",
-		"/favicon.ico",
-		"/index.html",
 		"/api/v1/users/signup",
 		"/api/v1/auth/login",
 		"/api/v1/users/duplication",
+		"/error",
+		"/favicon.ico",
+		"/index.html",
+		"/",
 	};
 
 	CorsConfigurationSource corsConfigurationSource() {
@@ -78,7 +79,7 @@ public class SecurityConfig {
 			CorsConfiguration config = new CorsConfiguration();
 			config.setAllowedHeaders(Collections.singletonList("*"));
 			config.setAllowedMethods(Collections.singletonList("*"));
-			config.setAllowedOriginPatterns(Arrays.asList("http://localhost:5173","https://team1-booklog.vercel.app/"));
+			config.setAllowedOriginPatterns(Arrays.asList("http://localhost:5173","https://team1-booklog.vercel.app/","https://api-booklog.ezbooks.kr/"));
 			config.setAllowCredentials(true);
 			return config;
 		};
